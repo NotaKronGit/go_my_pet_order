@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order
+  namespace: shop-system
+spec:
+  selector:
+    matchLabels:
+      app: order
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
