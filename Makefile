@@ -5,6 +5,8 @@ BASE_IMAGE_NAME:=shop
 SERVICE_NAME:=order
 VERSION:=0.0.1
 SERVICE_IMAGE:=$(BASE_IMAGE_NAME)/$(SERVICE_NAME):$(VERSION)
+NAMESPACE:=shop-system
+APP:=order
 
 dev-up:
 	kind create cluster \
@@ -17,6 +19,12 @@ dev-down:
 
 dev-load:
 	kind load docker-image $(SERVICE_IMAGE) --name $(KIND_CLUSTER)
+
+dev-log:
+	kubectl logs --namespace=$(NAMESPACE) -l app=$(APP) --all-containers=true -f --tail=10
+
+dev-apply:
+	kustomize build ci/k8s/dev/order | kubectl apply -f -
 
 img:
 	docker build -f ci/Docker/order.dockerfile -t $(SERVICE_IMAGE) .
